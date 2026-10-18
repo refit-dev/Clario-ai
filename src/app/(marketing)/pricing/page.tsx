@@ -25,41 +25,39 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 const FREE_FEATURES = [
   "100 AI requests/month",
-  "AI Chat (Llama 3.1 8B)",
-  "Text Summarizer (11 modes)",
-  "YouTube URL → transcript",
+  "Chat + Summarizer",
+  "10 summary modes",
   "1 Brand Voice",
-  "Content Remix (3 formats)",
+  "3 Remix formats",
   "Email support",
 ];
 
 const PRO_FEATURES = [
   "1,000 AI requests/month",
-  "Everything in Free",
   "All 10 Remix formats",
-  "Content Remix Studio",
+  "Export to Notion / Google Docs",
+  "AI Image Prompt Generator",
   "3 Brand Voices",
   "Priority support",
-  "Early access to new features",
 ];
 
 const FAQ = [
   { q: "What counts as an AI request?", a: "Each summarization or chat message counts as one request. Remix Studio generates all formats in a single request  not 10 separate ones." },
   { q: "Can I upgrade or downgrade anytime?", a: "Yes. Upgrade instantly, downgrade at the end of your billing period. No contracts, no penalties." },
   { q: "What happens when I hit my request limit?", a: "You'll see a clear warning at 80% usage. Once the limit is reached, you can still view past outputs but won't be able to run new AI requests until you upgrade or your cycle resets." },
-  { q: "Is there a free trial for Pro?", a: "The Free plan gives you 100 AI requests per month with no credit card required  a great way to try Clario before upgrading." },
+  { q: "What happens when the Free plan opens?", a: "The Free plan is coming soon with 100 AI requests per month and no credit card required. We will email you the moment it opens." },
   { q: "Do you offer refunds?", a: "Yes  if you're unsatisfied within 14 days of your first charge, contact us for a full refund, no questions asked." },
   { q: "What AI models power Clario?", a: "We use Groq's Llama 3.3 70B for summarization and Llama 3.1 8B for chat. These are state-of-the-art open models running on Groq's ultra-fast inference infrastructure." },
 ];
 
 const TABLE_ROWS: [string, string, string][] = [
   ["AI requests/month", "100", "1,000"],
-  ["Text Summarizer", "✓", "✓"],
-  ["Summary modes", "11", "11"],
-  ["YouTube URL → transcript", "✓", "✓"],
-  ["AI Chat", "✓", "✓"],
+  ["Chat + Summarizer", "✓", "✓"],
+  ["Summary modes", "10", "10"],
   ["Brand Voices", "1", "3"],
   ["Remix formats", "3", "All 10"],
+  ["Export to Notion / Google Docs", "", "✓"],
+  ["AI Image Prompt Generator", "", "✓"],
   ["Priority support", "", "✓"],
   ["Early access to features", "", "✓"],
 ];
@@ -109,27 +107,37 @@ export default function PricingPage() {
         .toggle-opt.active{background:var(--bk);color:#fff}
         .toggle-opt.inactive{background:transparent;color:var(--g5)}
         .save-badge{font-size:.62rem;font-weight:700;background:var(--ol);color:var(--o);border:1px solid var(--om);padding:2px 8px;border-radius:100px;letter-spacing:.04em}
-        .p-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:740px;margin:0 auto}
+        .p-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;margin:0 auto;align-items:stretch}
         @media(max-width:540px){.p-grid{grid-template-columns:1fr}}
-        .p-card{border-radius:20px;padding:32px;border:1.5px solid var(--g2);background:var(--w);position:relative;transition:transform .25s,box-shadow .25s;animation:fu .5s ease both}
+        .p-card{border-radius:20px;padding:30px;border:1.5px solid var(--g2);background:var(--w);position:relative;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s;animation:fu .5s ease both}
         .p-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.08)}
         .p-card.feat{background:var(--bk);border-color:var(--bk)}
+        .p-card.soon{background:var(--g0);border-style:dashed}
+        .p-card.soon:hover{transform:none;box-shadow:none}
         .p-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--o);color:#fff;font-size:.62rem;font-weight:700;padding:3px 13px;border-radius:100px;letter-spacing:.08em;white-space:nowrap}
         .p-name{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g4);margin-bottom:12px}
-        .p-price{font-family:var(--serif);font-size:3rem;font-weight:300;letter-spacing:-.05em;line-height:1;color:var(--bk);margin-bottom:5px}
-        .p-price sub{font-size:.88rem;font-family:var(--sans);font-weight:400;color:var(--g5);vertical-align:middle;letter-spacing:0}
-        .p-desc{font-size:.8rem;color:var(--g5);margin-bottom:20px;line-height:1.55}
+        .p-price{font-family:var(--serif);font-size:3rem;font-weight:300;letter-spacing:-.05em;line-height:1;color:var(--bk);margin-bottom:8px}
+        .p-price sub{font-size:.88rem;font-family:var(--sans);font-weight:400;color:var(--g5);vertical-align:middle;letter-spacing:0;margin-left:2px}
+        .p-desc{font-size:.8rem;color:var(--g5);margin-bottom:20px;line-height:1.55;min-height:2.4em}
         .p-div{border:none;border-top:1px solid var(--g2);margin-bottom:18px}
-        .p-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
-        .p-item{display:flex;align-items:flex-start;gap:8px;font-size:.8rem;color:var(--g7)}
+        .p-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+        .p-item{display:flex;align-items:flex-start;gap:9px;font-size:.8rem;line-height:1.45;color:var(--g7)}
         .p-ck{width:16px;height:16px;border-radius:50%;background:var(--ol);color:var(--o);font-size:.55rem;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;margin-top:1px}
-        .feat .p-name,.feat .p-price,.feat .p-desc,.feat .p-item{color:#fff!important}
+        .feat .p-name{color:rgba(255,255,255,.5)}
+        .feat .p-price,.feat .p-desc,.feat .p-item{color:#fff}
         .feat .p-div{border-color:rgba(255,255,255,.1)}
-        .feat .p-price sub{color:rgba(255,255,255,.4)!important}
+        .feat .p-price sub{color:rgba(255,255,255,.4)}
         .feat .p-ck{background:rgba(249,115,22,.2)}
-        .btn-free{width:100%;padding:12px;border-radius:10px;font-size:.84rem;font-weight:600;font-family:var(--sans);background:transparent;color:var(--bk);border:1.5px solid var(--g2);cursor:pointer;transition:all .2s;letter-spacing:-.01em}
-        .btn-free:hover{background:var(--bk);color:#fff;border-color:var(--bk)}
-        .btn-pro{width:100%;padding:12px;border-radius:10px;font-size:.84rem;font-weight:600;font-family:var(--sans);background:var(--o);color:#fff;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(249,115,22,.35);letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;gap:7px}
+        .p-soon{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--w);color:var(--g5);border:1px solid var(--g2);font-size:.6rem;font-weight:700;padding:3px 12px;border-radius:100px;letter-spacing:.1em;white-space:nowrap}
+        .p-live{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:rgba(34,197,94,.16);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+        .p-live-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.2)}
+        .p-soon-note{font-size:.72rem;font-weight:700;color:var(--g5);margin-bottom:4px}
+        .p-soon-sub{font-size:.72rem;color:var(--g4);margin-bottom:18px;line-height:1.55}
+        .p-list+.p-soon-note{margin-top:auto}
+        .btn-free{width:100%;padding:12px;border-radius:10px;font-size:.84rem;font-weight:600;font-family:var(--sans);background:transparent;color:var(--bk);border:1.5px solid var(--g2);cursor:pointer;transition:all .2s;letter-spacing:-.01em;margin-top:auto}
+        .btn-free:disabled{color:var(--g4);border-color:var(--g2);cursor:not-allowed;background:var(--w)}
+        .btn-free:hover:not(:disabled){background:var(--bk);color:#fff;border-color:var(--bk)}
+        .btn-pro{width:100%;padding:12px;border-radius:10px;font-size:.84rem;font-weight:600;font-family:var(--sans);background:var(--o);color:#fff;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(249,115,22,.35);letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:auto}
         .btn-pro:hover{background:#ea6c0a;transform:translateY(-1px)}
         .spinner-sm{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
         .feat-table-wrap{max-width:860px;margin:0 auto;overflow-x:auto}
@@ -152,8 +160,8 @@ export default function PricingPage() {
       {/* Hero */}
       <div className="price-hero">
         <div style={{ fontSize: ".68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: "var(--o)", marginBottom: 12 }}>Pricing</div>
-        <h1 className="price-h1">Simple pricing for<br /><em>serious creators.</em></h1>
-        <p className="price-sub">Start free. Upgrade when you&apos;re ready. No surprises, no hidden fees.</p>
+        <h1 className="price-h1">Simple, honest<br /><em>pricing.</em></h1>
+        <p className="price-sub">The free plan is coming soon. Pro is live now, so you can start shipping content today.</p>
 
         <div className="toggle-wrap">
           <button className={`toggle-opt${!annual ? " active" : " inactive"}`} onClick={() => setAnnual(false)}>Monthly</button>
@@ -162,16 +170,19 @@ export default function PricingPage() {
         </div>
 
         <div className="p-grid">
-          <div className="p-card">
+          <div className="p-card soon">
+            <div className="p-soon">COMING SOON</div>
             <div className="p-name">Free</div>
             <div className="p-price">$0<sub>/mo</sub></div>
-            <p className="p-desc">Everything to start repurposing. No card required.</p>
+            <p className="p-desc">Everything to get started. No card required.</p>
             <hr className="p-div" />
             <ul className="p-list">{FREE_FEATURES.map(f => <li key={f} className="p-item"><span className="p-ck">✓</span>{f}</li>)}</ul>
-            <button className="btn-free" onClick={() => handleUpgrade("free")} disabled={loadingPlan === "free"}>Get started free</button>
+            <p className="p-soon-sub">We will email you when the free plan opens.</p>
+            <button className="btn-free" disabled>Available soon</button>
           </div>
           <div className="p-card feat">
             <div className="p-badge">MOST POPULAR</div>
+            <div className="p-live"><span className="p-live-dot" />Live now</div>
             <div className="p-name">Pro</div>
             <div className="p-price">${proPrice}<sub>/mo</sub></div>
             {annual && (
@@ -179,16 +190,21 @@ export default function PricingPage() {
                 ${annualTotal}/yr &nbsp;·&nbsp; save $48 vs monthly
               </div>
             )}
-            <p className="p-desc">For creators who ship content every single day.</p>
+            <p className="p-desc">For creators who ship content every day.</p>
             <hr className="p-div" />
             <ul className="p-list">{PRO_FEATURES.map(f => <li key={f} className="p-item"><span className="p-ck">✓</span>{f}</li>)}</ul>
             <button className="btn-pro" onClick={() => handleUpgrade("pro")} disabled={loadingPlan === "pro"}>
               {loadingPlan === "pro" && <div className="spinner-sm" />}
-              {loadingPlan === "pro" ? "Redirecting..." : "Upgrade to Pro →"}
+              {loadingPlan === "pro" ? "Redirecting..." : "Upgrade to Pro"}
+              {loadingPlan !== "pro" && (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
-        <p style={{ fontSize: ".72rem", color: "var(--g4)", marginTop: 18 }}>No card required on Free · Cancel anytime · 14-day money-back guarantee</p>
+        <p style={{ fontSize: ".72rem", color: "var(--g4)", marginTop: 18 }}>Billed monthly, cancel any time</p>
       </div>
 
       {/* Feature comparison table */}
@@ -240,12 +256,10 @@ export default function PricingPage() {
       <section style={{ background: "var(--bk)", padding: "64px 5%", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", width: 400, height: 400, background: "#f97316", borderRadius: "50%", filter: "blur(100px)", opacity: .07, top: "50%", left: "50%", transform: "translate(-50%,-50%)", pointerEvents: "none" }} />
         <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 300, color: "#fff", letterSpacing: "-.03em", marginBottom: 16, position: "relative" }}>
-          Start creating today. <em style={{ color: "var(--o)" }}>It&apos;s free.</em>
+          Start shipping today. <em style={{ color: "var(--o)" }}>Go Pro now.</em>
         </h2>
-        <p style={{ fontSize: ".88rem", color: "rgba(255,255,255,.38)", marginBottom: 28, position: "relative" }}>No card required. 100 AI requests a month on us.</p>
-        <button className="btn-pro" onClick={() => router.push("/sign-up")} style={{ display: "inline-flex", width: "auto", padding: "13px 28px", position: "relative", fontSize: ".9rem" }}>
-          Get started free
-        </button>
+        <p style={{ fontSize: ".88rem", color: "rgba(255,255,255,.38)", marginBottom: 28, position: "relative" }}>Pro is live. The free plan opens soon, and we will email you first.</p>
+
       </section>
     </>
   );

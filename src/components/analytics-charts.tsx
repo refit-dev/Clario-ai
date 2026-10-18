@@ -60,7 +60,7 @@ function EmptyChart({ title }: { title: string }) {
         href="/summarizer"
         className="text-[11px] font-semibold text-[hsl(var(--accent))] transition-opacity hover:opacity-80"
       >
-        Open Summarizer →
+        Open Summarizer ➜
       </Link>
     </div>
   );

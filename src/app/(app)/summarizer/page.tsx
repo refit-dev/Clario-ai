@@ -143,6 +143,7 @@ function ToastContainer({
 }) {
   return (
     <div
+      className="toast-container"
       style={{
         position: "fixed",
         bottom: 24,
@@ -722,6 +723,10 @@ export default function SummarizerPage() {
         }
         .mobile-overlay{display:none}
         @media(max-width:768px){.mobile-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}}
+        @media(max-width:640px){
+          .toast-container{left:12px;right:12px;bottom:12px;max-width:none}
+          .toast-container > div{max-width:100%}
+        }
       `}</style>
 
       <ToastContainer toasts={toasts} dismiss={dismissToast} />
@@ -1190,7 +1195,7 @@ export default function SummarizerPage() {
                       </span>
                     )}
                     <div
-                      style={{ display: "flex", gap: 8, alignItems: "center" }}
+                      style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
                     >
                       <button
                         onClick={handleCopy}

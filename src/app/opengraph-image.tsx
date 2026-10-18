@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const alt = "Clario - AI Content Repurposing Tool for Creators";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -77,7 +77,7 @@ export default function OGImage() {
         <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
               alignItems: "center",
               gap: 8,
               background: "rgba(249,115,22,.15)",
@@ -98,6 +98,8 @@ export default function OGImage() {
 
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
               fontSize: 72,
               fontWeight: 300,
               color: "#fff",
@@ -152,7 +154,7 @@ export default function OGImage() {
           <div style={{ fontSize: 15, color: "rgba(255,255,255,.3)", letterSpacing: "0.06em", textTransform: "uppercase", fontWeight: 600 }}>
             Start free
           </div>
-          <div style={{ fontSize: 48, fontWeight: 300, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1 }}>
+          <div style={{ display: "flex", alignItems: "baseline", fontSize: 48, fontWeight: 300, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1 }}>
             $0<span style={{ fontSize: 20, color: "rgba(255,255,255,.35)", fontWeight: 400 }}>/month</span>
           </div>
         </div>

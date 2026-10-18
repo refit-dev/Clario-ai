@@ -49,11 +49,11 @@ Format:
 
 Here's what I learned:
 
-→ [Key insight with brief explanation]
-→ [Key insight with brief explanation]
-→ [Key insight with brief explanation]
-→ [Key insight with brief explanation]
-→ [Key insight with brief explanation]
+➜ [Key insight with brief explanation]
+➜ [Key insight with brief explanation]
+➜ [Key insight with brief explanation]
+➜ [Key insight with brief explanation]
+➜ [Key insight with brief explanation]
 
 [2-3 lines of personal reflection or broader implication]
 

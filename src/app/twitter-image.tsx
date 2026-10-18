@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const alt = "Clario - AI Content Repurposing Tool for Creators";
 export const size = { width: 1200, height: 600 };
 export const contentType = "image/png";
@@ -69,7 +69,7 @@ export default function TwitterImage() {
         <div style={{ position: "relative", display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
               alignItems: "center",
               gap: 8,
               background: "rgba(249,115,22,.15)",
@@ -87,7 +87,7 @@ export default function TwitterImage() {
             <div style={{ width: 7, height: 7, background: "#f97316", borderRadius: "50%" }} />
             Built for content creators
           </div>
-          <div style={{ fontSize: 64, fontWeight: 300, color: "#fff", lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 20 }}>
+          <div style={{ display: "flex", flexDirection: "column", fontSize: 64, fontWeight: 300, color: "#fff", lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 20 }}>
             Your content,{" "}
             <span style={{ color: "#f97316", fontStyle: "italic" }}>repurposed</span>
             <br />

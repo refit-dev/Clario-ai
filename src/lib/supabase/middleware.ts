@@ -69,7 +69,7 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/api') ||
     request.nextUrl.pathname.startsWith('/auth')
 
-  // Logged-in user visiting public/auth pages → redirect to dashboard
+  // Logged-in user visiting public/auth pages ➜ redirect to dashboard
   if (user && (
     request.nextUrl.pathname === '/' ||
     request.nextUrl.pathname.startsWith('/sign-in') ||
@@ -80,7 +80,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Unauthenticated user visiting protected pages → redirect to sign-in
+  // Unauthenticated user visiting protected pages ➜ redirect to sign-in
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone()
     url.pathname = '/sign-in'

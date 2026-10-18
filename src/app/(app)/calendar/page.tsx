@@ -177,11 +177,11 @@ function CalendarPageInner() {
     try {
       if (editingEvent) {
         const { error } = await supabase.from("calendar_events").update({
-          title: formData.title, 
+          title: formData.title,
           scheduled_at: formData.scheduled_at,
-          platform: formData.platform?.toLowerCase(), 
+          platform: formData.platform?.toLowerCase(),
           content_text: formData.content,
-          color: formData.color, 
+          color: formData.color,
           status: formData.status?.toLowerCase()
         }).eq("id", editingEvent.id).eq("user_id", user.id);
         if (error) {
@@ -191,12 +191,12 @@ function CalendarPageInner() {
         showToast("Event updated", "success");
       } else {
         const { error } = await supabase.from("calendar_events").insert({
-          user_id: user.id, 
-          title: formData.title, 
+          user_id: user.id,
+          title: formData.title,
           scheduled_at: formData.scheduled_at,
-          platform: formData.platform?.toLowerCase(), 
+          platform: formData.platform?.toLowerCase(),
           content_text: formData.content,
-          color: formData.color, 
+          color: formData.color,
           status: formData.status?.toLowerCase()
         });
         if (error) {
@@ -259,7 +259,7 @@ function CalendarPageInner() {
     const days = [];
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    
+
     for (let i = 0; i < firstDay; i++) days.push(<div key={`empty-${i}`} style={{ minHeight: 90 }} />);
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -405,7 +405,7 @@ function CalendarPageInner() {
                         setMonth(month + 1);
                       }
                     }}
-                      style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, padding: "8px 12px", cursor: "pointer", color: "var(--text)" }}>→</button>
+                      style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, padding: "8px 12px", cursor: "pointer", color: "var(--text)" }}>➜</button>
                     <button onClick={() => openAddModal()}
                       style={{ background: "hsl(var(--accent))", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", color: "#fff", fontWeight: 500 }}>
                       Add Event

@@ -382,10 +382,10 @@ create trigger on_auth_user_created
 
 ### Supabase Auth Setup
 
-1. In Supabase → Authentication → URL Configuration:
+1. In Supabase ➜ Authentication ➜ URL Configuration:
    - Set **Site URL** to your production domain
    - Add `https://yourdomain.com/auth/callback` to **Redirect URLs**
-2. For Google OAuth: Authentication → Providers → Google → add your OAuth credentials
+2. For Google OAuth: Authentication ➜ Providers ➜ Google ➜ add your OAuth credentials
 
 ---
 

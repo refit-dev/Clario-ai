@@ -12,7 +12,7 @@ export function AppAppShell({ children }: { children: React.ReactNode }) {
       <AppSidebar />
       <div
         className={cn(
-          "min-h-screen w-full transition-[padding] duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
+          "min-h-screen w-full transition-[padding] duration-250 ease-smooth",
           collapsed ? "md:pl-[72px]" : "md:pl-[240px]",
         )}
       >

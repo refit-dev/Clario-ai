@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { useTheme } from '@/components/ThemeProvider'
 import { MktNav } from '@/components/marketing/MktNav'
 import { MktFooter } from '@/components/marketing/MktFooter'
@@ -12,7 +12,11 @@ export default function MarketingLayout({
 }) {
   const { setTheme } = useTheme()
 
-  useEffect(() => {
+  // Force light theme synchronously before paint so nav/footer never
+  // flash as dark/unstyled on any device including slow mobile browsers.
+  useLayoutEffect(() => {
+    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.add('light')
     setTheme('light')
   }, [setTheme])
 

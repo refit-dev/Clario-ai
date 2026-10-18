@@ -115,10 +115,10 @@ export default function RootLayout({
             __html: `
               try {
                 var theme = localStorage.getItem('clario-theme');
-                if (!theme && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                  theme = 'light';
+                if (!theme) {
+                  theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 }
-                document.documentElement.classList.add(theme || 'dark');
+                document.documentElement.classList.add(theme);
               } catch (e) {}
             `,
           }}

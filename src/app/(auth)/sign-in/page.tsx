@@ -4,7 +4,6 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useTheme } from "@/components/ThemeProvider";
 
 const AUTH_STYLES = `
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -12,12 +11,9 @@ const AUTH_STYLES = `
   @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  .auth-wrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
-  @media(max-width:820px){.auth-wrap{grid-template-columns:1fr}}
-  .auth-left{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 5%;min-height:100vh}
+  .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+  .auth-left{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 5%;min-height:100vh;width:100%}
   @media(max-width:480px){.auth-left{padding:32px 4%}}
-  .auth-right{background:var(--bg2);border-left:1px solid hsl(var(--border));padding:48px 40px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;overflow-y:auto}
-  @media(max-width:820px){.auth-right{display:none}}
   .auth-card{width:100%;max-width:400px;animation:fu .5s ease both}
   .auth-logo{font-family:var(--serif);font-size:1.4rem;font-weight:300;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;margin-bottom:40px}
   .auth-logo-mark{width:28px;height:28px;background:hsl(var(--accent));border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -32,7 +28,7 @@ const AUTH_STYLES = `
     padding:11px 14px;font-size:.88rem;color:var(--text);font-family:var(--sans);
     outline:none;transition:border-color .18s,box-shadow .18s;width:100%;
   }
-  .field-input:focus{border-color:hsl(var(--accent));box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+  .field-input:focus{outline:none;box-shadow:none}
   .field-input::placeholder{color:var(--text3)}
   .field-input.error{border-color:var(--error)}
   .btn-primary{
@@ -61,8 +57,6 @@ const AUTH_STYLES = `
   .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
   .forgot-link{font-size:.75rem;color:var(--text3);text-decoration:none;text-align:right;transition:color .15s}
   .forgot-link:hover{color:hsl(var(--accent))}
-  .theme-toggle{position:fixed;top:14px;right:14px;z-index:100;width:34px;height:34px;border-radius:8px;background:var(--bg3);border:1px solid hsl(var(--border));color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
-  .theme-toggle:hover{color:var(--text);border-color:var(--border2)}
 `;
 
 function GoogleIcon() {
@@ -88,206 +82,10 @@ function GoogleIcon() {
   );
 }
 
-function AuthRightPanel({
-  headline,
-  sub,
-  features,
-}: {
-  headline: string;
-  sub: string;
-  features: string[];
-}) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        zIndex: 1,
-        maxWidth: 420,
-        margin: "0 auto",
-        width: "100%",
-      }}
-    >
-      {/* Glow */}
-      <div
-        style={{
-          position: "absolute",
-          width: 320,
-          height: 320,
-          background: "#f97316",
-          borderRadius: "50%",
-          filter: "blur(100px)",
-          opacity: 0.06,
-          top: -100,
-          right: -80,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Headline */}
-      <div style={{ marginBottom: 28 }}>
-        <div
-          style={{
-            fontFamily: "var(--font-fraunces), Georgia, serif",
-            fontSize: "clamp(1.7rem,2.8vw,2.3rem)",
-            fontWeight: 300,
-            color: "var(--text)",
-            letterSpacing: "-.03em",
-            lineHeight: 1.15,
-            marginBottom: 10,
-          }}
-        >
-          {headline}
-        </div>
-        <p
-          style={{
-            fontSize: ".85rem",
-            color: "var(--text3)",
-            lineHeight: 1.7,
-            margin: 0,
-          }}
-        >
-          {sub}
-        </p>
-      </div>
-
-      {/* Feature list */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
-          marginBottom: 28,
-        }}
-      >
-        {features.map((f, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 12,
-              padding: "11px 14px",
-              background: "var(--bg3)",
-              borderRadius: 10,
-              border: "1px solid hsl(var(--border))",
-            }}
-          >
-            <div
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: "50%",
-                background: "var(--accent-l)",
-                border: "1px solid var(--accent-m)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                marginTop: 1,
-              }}
-            >
-              <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-                <polyline
-                  points="1.5,6 4.5,9 10.5,3"
-                  stroke="hsl(var(--accent))"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <span
-              style={{ fontSize: ".82rem", color: "var(--text2)", lineHeight: 1.55 }}
-            >
-              {f}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Stats */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 8,
-          marginBottom: 16,
-        }}
-      >
-        {[
-          { value: "11", label: "Summary modes" },
-          { value: "10×", label: "Remix formats" },
-          { value: "100%", label: "AI-powered" },
-        ].map(({ value, label }) => (
-          <div
-            key={label}
-            style={{
-              background: "var(--bg3)",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: 10,
-              padding: "14px 8px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-fraunces), Georgia, serif",
-                fontSize: "1.35rem",
-                fontWeight: 400,
-                color: "hsl(var(--accent))",
-                letterSpacing: "-.02em",
-                lineHeight: 1,
-                marginBottom: 4,
-              }}
-            >
-              {value}
-            </div>
-            <div
-              style={{ fontSize: ".65rem", color: "var(--text3)", lineHeight: 1.3 }}
-            >
-              {label}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quote */}
-      <div
-        style={{
-          padding: "14px 16px",
-          background: "var(--bg3)",
-          border: "1px solid hsl(var(--border))",
-          borderRadius: 10,
-          borderLeft: "3px solid hsl(var(--accent))",
-        }}
-      >
-        <p
-          style={{
-            fontSize: ".78rem",
-            color: "var(--text2)",
-            lineHeight: 1.65,
-            fontStyle: "italic",
-            margin: "0 0 6px 0",
-          }}
-        >
-          &ldquo;Built for creators who want to move fast &mdash; not spend
-          hours reformatting the same content for every platform.&rdquo;
-        </p>
-        <p style={{ fontSize: ".7rem", color: "var(--text3)", margin: 0 }}>
-          {" "}
-          Muhammad Tanveer Abbas, Builder of Clario
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -342,45 +140,6 @@ function SignInForm() {
     <>
       <style>{AUTH_STYLES}</style>
       <div className="auth-wrap">
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          title={isDark ? "Light mode" : "Dark mode"}
-        >
-          {isDark ? (
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            >
-              <circle cx="12" cy="12" r="5" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-          ) : (
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          )}
-        </button>
         <div className="auth-left">
           <div className="auth-card">
             <Link href="/" className="auth-logo">
@@ -523,20 +282,7 @@ function SignInForm() {
               <Link href="/sign-up">Create one free</Link>
             </div>
           </div>
-        </div>
-        <div className="auth-right">
-          <AuthRightPanel
-            headline="Your content, multiplied."
-            sub="Clario's AI toolkit helps creators save hours every week."
-            features={[
-              "Summarize any YouTube video in seconds",
-              "Turn 1 post into 10 formats instantly",
-              "Brand Voice that sounds exactly like you",
-              "AI chat trained on creator workflows",
-            ]}
-          />
-        </div>
-      </div>
+        </div>      </div>
     </>
   );
 }

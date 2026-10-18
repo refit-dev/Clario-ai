@@ -4,7 +4,6 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useTheme } from "@/components/ThemeProvider";
 
 const AUTH_STYLES = `
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -12,12 +11,9 @@ const AUTH_STYLES = `
   @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  .auth-wrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
-  @media(max-width:820px){.auth-wrap{grid-template-columns:1fr}}
-  .auth-left{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 5%;min-height:100vh}
+  .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+  .auth-left{background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 5%;min-height:100vh;width:100%}
   @media(max-width:480px){.auth-left{padding:32px 4%}}
-  .auth-right{background:var(--bg2);border-left:1px solid hsl(var(--border));padding:48px 40px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;overflow-y:auto}
-  @media(max-width:820px){.auth-right{display:none}}
   .auth-card{width:100%;max-width:400px;animation:fu .5s ease both}
   .auth-logo{font-family:var(--serif);font-size:1.4rem;font-weight:300;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;margin-bottom:40px}
   .auth-logo-mark{width:28px;height:28px;background:hsl(var(--accent));border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -32,7 +28,7 @@ const AUTH_STYLES = `
     padding:11px 14px;font-size:.88rem;color:var(--text);font-family:var(--sans);
     outline:none;transition:border-color .18s,box-shadow .18s;width:100%;
   }
-  .field-input:focus{border-color:hsl(var(--accent));box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+  .field-input:focus{outline:none;box-shadow:none}
   .field-input::placeholder{color:var(--text3)}
   .btn-primary{
     background:hsl(var(--accent));color:#fff;border:none;border-radius:9px;
@@ -59,11 +55,23 @@ const AUTH_STYLES = `
   .global-error{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:9px;padding:10px 13px;font-size:.8rem;color:var(--error);margin-bottom:4px}
   .global-success{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:9px;padding:10px 13px;font-size:.8rem;color:var(--success);margin-bottom:4px}
   .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-  .terms-note{font-size:.72rem;color:var(--text3);text-align:center;line-height:1.5;margin-top:8px}
-  .terms-note a{color:var(--text3);text-decoration:none}
+  .terms-row{display:flex;align-items:flex-start;gap:11px;margin-top:6px;cursor:pointer;user-select:none}
+  .terms-box-wrap{position:relative;flex:0 0 auto;width:20px;height:20px;display:block}
+  .terms-box{
+    appearance:none;-webkit-appearance:none;position:absolute;inset:0;width:20px;height:20px;margin:0;
+    border:1.5px solid hsl(var(--border2));border-radius:6px;background:var(--bg2);cursor:pointer;
+    transition:background .15s,border-color .15s,box-shadow .15s;
+  }
+  .terms-box-wrap svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .12s}
+  .terms-box:hover{border-color:hsl(var(--accent))}
+  .terms-box:checked{background:hsl(var(--accent));border-color:hsl(var(--accent))}
+  .terms-box:focus-visible{outline:none;border-color:hsl(var(--accent));box-shadow:0 0 0 3px rgba(249,115,22,.2)}
+  .terms-box.error{border-color:var(--error);box-shadow:0 0 0 3px rgba(248,113,113,.15)}
+  .terms-box:checked + svg{opacity:1}
+  .terms-text{font-size:.78rem;color:var(--text3);line-height:20px;text-align:left;padding-top:0}
+  .terms-text a{color:var(--text2);text-decoration:underline;text-underline-offset:2px;font-weight:500}
+  .terms-text a:hover{color:hsl(var(--accent))}
   .pro-badge{display:flex;align-items:center;gap:7px;background:var(--accent-l);border:1px solid var(--accent-m);border-radius:8px;padding:7px 11px;margin-bottom:20px;font-size:.76rem;color:hsl(var(--accent));font-weight:600}
-  .theme-toggle{position:fixed;top:14px;right:14px;z-index:100;width:34px;height:34px;border-radius:8px;background:var(--bg3);border:1px solid hsl(var(--border));color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
-  .theme-toggle:hover{color:var(--text);border-color:var(--border2)}
 `;
 
 function GoogleIcon() {
@@ -89,205 +97,10 @@ function GoogleIcon() {
   );
 }
 
-function AuthRightPanel({
-  headline,
-  sub,
-  features,
-}: {
-  headline: string;
-  sub: string;
-  features: string[];
-}) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        zIndex: 1,
-        maxWidth: 420,
-        margin: "0 auto",
-        width: "100%",
-      }}
-    >
-      {/* Glow */}
-      <div
-        style={{
-          position: "absolute",
-          width: 320,
-          height: 320,
-          background: "#f97316",
-          borderRadius: "50%",
-          filter: "blur(100px)",
-          opacity: 0.06,
-          top: -100,
-          right: -80,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Headline */}
-      <div style={{ marginBottom: 28 }}>
-        <div
-          style={{
-            fontFamily: "var(--font-fraunces), Georgia, serif",
-            fontSize: "clamp(1.7rem,2.8vw,2.3rem)",
-            fontWeight: 300,
-            color: "var(--text)",
-            letterSpacing: "-.03em",
-            lineHeight: 1.15,
-            marginBottom: 10,
-          }}
-        >
-          {headline}
-        </div>
-        <p
-          style={{
-            fontSize: ".85rem",
-            color: "var(--text3)",
-            lineHeight: 1.7,
-            margin: 0,
-          }}
-        >
-          {sub}
-        </p>
-      </div>
-
-      {/* Feature list */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
-          marginBottom: 28,
-        }}
-      >
-        {features.map((f, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 12,
-              padding: "11px 14px",
-              background: "var(--bg3)",
-              borderRadius: 10,
-              border: "1px solid hsl(var(--border))",
-            }}
-          >
-            <div
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: "50%",
-                background: "var(--accent-l)",
-                border: "1px solid var(--accent-m)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                marginTop: 1,
-              }}
-            >
-              <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-                <polyline
-                  points="1.5,6 4.5,9 10.5,3"
-                  stroke="hsl(var(--accent))"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <span
-              style={{ fontSize: ".82rem", color: "var(--text2)", lineHeight: 1.55 }}
-            >
-              {f}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Stats */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 8,
-          marginBottom: 16,
-        }}
-      >
-        {[
-          { value: "11", label: "Summary modes" },
-          { value: "10×", label: "Remix formats" },
-          { value: "100%", label: "AI-powered" },
-        ].map(({ value, label }) => (
-          <div
-            key={label}
-            style={{
-              background: "var(--bg3)",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: 10,
-              padding: "14px 8px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--font-fraunces), Georgia, serif",
-                fontSize: "1.35rem",
-                fontWeight: 400,
-                color: "hsl(var(--accent))",
-                letterSpacing: "-.02em",
-                lineHeight: 1,
-                marginBottom: 4,
-              }}
-            >
-              {value}
-            </div>
-            <div
-              style={{ fontSize: ".65rem", color: "var(--text3)", lineHeight: 1.3 }}
-            >
-              {label}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Quote */}
-      <div
-        style={{
-          padding: "14px 16px",
-          background: "var(--bg3)",
-          border: "1px solid hsl(var(--border))",
-          borderRadius: 10,
-          borderLeft: "3px solid hsl(var(--accent))",
-        }}
-      >
-        <p
-          style={{
-            fontSize: ".78rem",
-            color: "var(--text2)",
-            lineHeight: 1.65,
-            fontStyle: "italic",
-            margin: "0 0 6px 0",
-          }}
-        >
-          &ldquo;Built for creators who want to move fast &mdash; not spend
-          hours reformatting the same content for every platform.&rdquo;
-        </p>
-        <p style={{ fontSize: ".7rem", color: "var(--text3)", margin: 0 }}>
-          Muhammad Tanveer Abbas, Builder of Clario
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function SignUpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
   const plan = searchParams.get("plan");
 
   const [fullName, setFullName] = useState("");
@@ -298,6 +111,8 @@ function SignUpForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [agreedError, setAgreedError] = useState(false);
 
   const passwordStrength = (() => {
     if (password.length === 0) return 0;
@@ -315,6 +130,11 @@ function SignUpForm() {
     setSuccess("");
     if (password.length < 8) {
       setError("Password must be at least 8 characters.");
+      return;
+    }
+    if (!agreed) {
+      setAgreedError(true);
+      setError("Please accept the Terms of Service and Privacy Policy.");
       return;
     }
     setLoading(true);
@@ -371,45 +191,6 @@ function SignUpForm() {
     <>
       <style>{AUTH_STYLES}</style>
       <div className="auth-wrap">
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          title={isDark ? "Light mode" : "Dark mode"}
-        >
-          {isDark ? (
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            >
-              <circle cx="12" cy="12" r="5" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-          ) : (
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          )}
-        </button>
         <div className="auth-left">
           <div className="auth-card">
             <Link href="/" className="auth-logo">
@@ -587,27 +368,42 @@ function SignUpForm() {
                 {loading && <div className="spinner" />}
                 {loading ? "Creating account..." : "Create free account"}
               </button>
-              <p className="terms-note">
-                I agree to <Link href="/terms">Terms of Service</Link> and{" "}
-                <Link href="/privacy">Privacy Policy</Link>.
-              </p>
+              <label className="terms-row" htmlFor="terms-agree">
+                <span className="terms-box-wrap">
+                  <input
+                    id="terms-agree"
+                    type="checkbox"
+                    className={`terms-box${agreedError ? " error" : ""}`}
+                    checked={agreed}
+                    aria-invalid={agreedError}
+                    onChange={(e) => {
+                      setAgreed(e.target.checked);
+                      if (e.target.checked) {
+                        setAgreedError(false);
+                        setError("");
+                      }
+                    }}
+                  />
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <polyline
+                      points="1.5,6.2 4.5,9.2 10.5,2.8"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className="terms-text">
+                  I agree to the <Link href="/terms">Terms of Service</Link> and{" "}
+                  <Link href="/privacy">Privacy Policy</Link>.
+                </span>
+              </label>
             </form>
             <div className="auth-footer">
               Already have an account? <Link href="/sign-in">Sign in</Link>
             </div>
           </div>
-        </div>
-        <div className="auth-right">
-          <AuthRightPanel
-            headline="Built for creators, not enterprises."
-            sub="Everything you need to publish more, in less time  starting at $0."
-            features={[
-              "Free plan includes 100 AI requests/month",
-              "YouTube URL → instant transcript summary",
-              "10 formats from a single piece of content",
-              "Brand Voice trained on your own writing",
-            ]}
-          />
         </div>
       </div>
     </>

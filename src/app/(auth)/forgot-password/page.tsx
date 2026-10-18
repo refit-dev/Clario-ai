@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { useTheme } from "@/components/ThemeProvider";
 
 const STYLES = `
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -21,7 +20,7 @@ const STYLES = `
   .fp-field{display:flex;flex-direction:column;gap:5px}
   .fp-label{font-size:.75rem;font-weight:600;color:var(--text2);letter-spacing:.02em}
   .fp-input{background:var(--bg2);border:1px solid hsl(var(--border));border-radius:9px;padding:11px 14px;font-size:.88rem;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .18s,box-shadow .18s;width:100%}
-  .fp-input:focus{border-color:hsl(var(--accent));box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+  .fp-input:focus{outline:none;box-shadow:none}
   .fp-input::placeholder{color:var(--text3)}
   .fp-btn{background:hsl(var(--accent));color:#fff;border:none;border-radius:9px;padding:12px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:var(--sans);width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .18s}
   .fp-btn:hover:not(:disabled){background:#ea6c0a}
@@ -33,14 +32,10 @@ const STYLES = `
   .fp-footer a{color:hsl(var(--accent));text-decoration:none;font-weight:500}
   .fp-footer a:hover{text-decoration:underline}
   .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-  .theme-toggle{position:fixed;top:14px;right:14px;z-index:100;width:34px;height:34px;border-radius:8px;background:var(--bg2);border:1px solid hsl(var(--border));color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
-  .theme-toggle:hover{color:var(--text)}
 `;
 
 export default function ForgotPasswordPage() {
   const supabase = createClient();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -71,12 +66,6 @@ export default function ForgotPasswordPage() {
     <>
       <style>{STYLES}</style>
       <div className="fp-wrap">
-        <button className="theme-toggle" onClick={toggleTheme} title={isDark ? "Light mode" : "Dark mode"}>
-          {isDark
-            ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          }
-        </button>
         <div className="fp-card">
           <Link href="/" className="fp-logo">
             <div className="fp-logo-mark">

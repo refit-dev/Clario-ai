@@ -215,7 +215,7 @@ export function createReliableClient(
           throw new Error('Invalid Groq API key. Check your GROQ_API_KEY.')
         }
 
-        // Unavailable/deprecated model → refresh the list and retry once on a fallback.
+        // Unavailable/deprecated model ➜ refresh the list and retry once on a fallback.
         if (isModelUnavailableError(err) && allowModelFallback) {
           console.warn(
             `[AI] Model "${model}" unavailable; refreshing model list and selecting a fallback.`

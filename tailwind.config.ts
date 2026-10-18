@@ -76,6 +76,14 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      transitionDuration: {
+        250: '250ms',
+        400: '400ms',
+      },
+      transitionTimingFunction: {
+        smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        signature: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      },
       keyframes: {
         'accordion-down': {
           from: {
@@ -111,8 +119,9 @@ export default {
   },
   plugins: [require('tailwindcss-animate')],
   safelist: [
-    'duration-[250ms]',
-    'ease-[cubic-bezier(0.16,1,0.3,1)]',
-    'ease-[cubic-bezier(0.4,0,0.2,1)]',
+    'duration-250',
+    'duration-400',
+    'ease-smooth',
+    'ease-signature',
   ],
 } satisfies Config;
