@@ -4,7 +4,7 @@ import { checkRateLimit } from "@/middleware/rate-limit";
 import { getPriceId } from "@/config/plans";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-02-25.clover" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2026-09-30.endive" });
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      payment_method_types: ["card"],
+      allowed_payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
       client_reference_id: user.id,
       metadata: { userId: user.id },
