@@ -63,7 +63,7 @@
     "rehype-highlight": "^7.0.2",
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "stripe": "^20.4.1",
+    "stripe": "^23.0.0",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "youtubei.js": "^17.0.1",
